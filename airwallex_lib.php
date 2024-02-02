@@ -28,6 +28,11 @@ class Airwallex
             "Authorization: Bearer $token"
         );
         $submit_url = $this->gatewayUrl . '/pa/payment_intents/create';
+        //若收到的汇率为CNY，则转为HKD以提供支持，需自己补足汇率API
+        if ($currency == 'CNY') {
+            $amount = self::currency_convert($amount, $currency_apiKey, $currency, 'HKD');
+            $currency = 'HKD';
+        }
         $data = array(
             'request_id' => $request_id,
             'amount' => $amount,
@@ -51,15 +56,26 @@ class Airwallex
         );
         $submit_url = $this->gatewayUrl . '/pa/payment_intents/' . $payment_id . '/confirm';
         //检测是否为手机端构建函数
-        if (self::checkmobile()) {
+        if (self::checkMobile()) {
             $data = array(
                 'request_id' => $request_id,
-                'payment_method' => array('type' => 'alipaycn', 'alipaycn' => array('flow' => 'mweb', 'os_type' => 'android'))
+                'payment_method' => array(
+                    'type' => 'alipaycn',
+                    'alipaycn' => array(
+                        'flow' => 'mweb',
+                        'os_type' => 'android'
+                    )
+                )
             );
         } else {
             $data = array(
                 'request_id' => $request_id,
-                'payment_method' => array('type' => 'alipaycn', 'alipaycn' => array('flow' => 'webqr'))
+                'payment_method' => array(
+                    'type' => 'alipaycn',
+                    'alipaycn' => array(
+                        'flow' => 'webqr'
+                    )
+                )
             );
         }
         $output = self::postCurl($submit_url, $headerArray, json_encode($data));
@@ -67,6 +83,44 @@ class Airwallex
         $action_array = $result_array['next_action'];
         $url = $action_array['url'];
         return $url;
+    }
+
+    //查询订单状态
+    public function queryOrder($token, $id)
+    {
+        $headerArray = array(
+            "Content-type: application/json",
+            "Authorization: Bearer $token"
+        );
+        $query_url = $this->gatewayUrl . '/pa/payment_intents/' . $id;
+        $response = self::getCurl($query_url, $headerArray);
+        $result_array = json_decode($response, true);
+        return $result_array;
+    }
+
+    //webhook验证签名
+    public function verifySignature($timestamp, $signature, $sign_key, $body)
+    {
+        $value_to_digest = $timestamp + $body;
+        $generate_signature = hash_hmac('sha256', $value_to_digest, $sign_key);
+        if ($generate_signature == $signature) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //汇率转换，若API变化请自行替换该部分代码（彩虹自带的已不可用）
+    public function currency_convert($amount, $apiKey, $currency, $to_currency)
+    {
+        $fetch_url = 'https://api.fastforex.io/convert';
+        $get_currency_url = $fetch_url . '?api_key=' . $apiKey . '&from=' . $currency . '&to=' . $to_currency . '&amount=' . $amount;
+        $headerArray = array("Content-type:application/json");
+        $output = self::getCurl($get_currency_url, $headerArray);
+        $output = json_decode($output, true);
+        $result_array = $output['result'];
+        $result = $result_array[$to_currency];
+        return $result;
     }
 
     //发起post请求
@@ -100,7 +154,7 @@ class Airwallex
     }
 
     //判断是否为手机端，是返回true，否则返回false
-    function checkmobile()
+    function checkMobile()
     {
         $useragent = strtolower($_SERVER['HTTP_USER_AGENT']);
         $ualist = array('android', 'midp', 'nokia', 'mobile', 'iphone', 'ipod', 'blackberry', 'windows phone');
