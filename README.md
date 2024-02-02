@@ -13,9 +13,8 @@ $airwallex = new Airwallex();
 $return_url = 'https://fuck-airwallex.com';
 $amount = 11.4;
 $token = $airwallex->getToken($clientid, $apikey);//自行替换
-$request_id = time() . rand();
-$payment_id = $airwallex->initializePayment($token, $apikey, $request_id, $amount, 'CNY', 1145141919810, $return_url);
-$url = $airwallex->obtainAlipayBrowserUrl($token, $request_id + 1, $payment_id);
+$payment_id = $airwallex->initializePayment($token, $apikey, $amount, 'CNY', 1145141919810, $return_url);
+$url = $airwallex->obtainAlipayBrowserUrl($token, $payment_id);
 ```  
 验证webhook签名：
 ```php
