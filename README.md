@@ -1,14 +1,20 @@
 # airwallex_lib_php
 Airwallex空中云汇，PHP单文件SDK  
 目前仅支持支付宝，其他的后续更新  
+获取Token：  
+```php
+$airwallex = new Airwallex();
+$token = $airwallex->getToken($clientid, $apikey);//自行替换
+echo ($token);
+```  
 发起支付，获取支付宝支付链接：  
 ```php
 $airwallex = new Airwallex();
-$return_url = $siteurl . 'pay/return/' . TRADE_NO . '/';
-$amount = (float)$order['realmoney'];
-$token = $airwallex->getToken($channel['appid'], $channel['appkey']);
+$return_url = 'https://fuck-airwallex.com';
+$amount = 11.4;
+$token = $airwallex->getToken($clientid, $apikey);//自行替换
 $request_id = time() . rand();
-$payment_id = $airwallex->initializePayment($token, $channel['appsecret'], $request_id, $amount, 'CNY', TRADE_NO, $return_url);
+$payment_id = $airwallex->initializePayment($token, $channel['appsecret'], $request_id, $amount, 'CNY', 1145141919810, $return_url);
 $url = $airwallex->obtainAlipayBrowserUrl($token, $request_id + 1, $payment_id);
 ```  
 验证签名：
@@ -25,6 +31,6 @@ if ($verify_result) { //验证成功
         echo '';
     }
 } else {
-    header("HTTP/1.0 502 Fatal Error"); //返回502错误
+    header("HTTP/1.0 502 Fatal Error"); //返回502错误，使其重传
 }
 ```
