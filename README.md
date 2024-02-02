@@ -17,7 +17,7 @@ $request_id = time() . rand();
 $payment_id = $airwallex->initializePayment($token, $apikey, $request_id, $amount, 'CNY', 1145141919810, $return_url);
 $url = $airwallex->obtainAlipayBrowserUrl($token, $request_id + 1, $payment_id);
 ```  
-验证签名：
+验证webhook签名：
 ```php
 $x_timestamp = $_SERVER['HTTP-X-TIMESTAMP'];
 $x_signature = $_SERVER['HTTP-X-SIGNATURE'];
