@@ -1,5 +1,5 @@
 # airwallex_lib_php
-Airwallex空中云汇，PHP单文件依赖  
+Airwallex空中云汇，PHP单文件SDK  
 目前仅支持支付宝，其他的后续更新  
 发起支付，获取支付宝支付链接：  
 ```php
