@@ -20,7 +20,7 @@ class Airwallex
     }
 
     //支付订单初始化，返回付款ID
-    public function initializePayment($token, $currency_apiKey, $request_id, $amount, $currency, $merchant_order_id, $return_url)
+    public function initializePayment($token, $currency_apiKey, $amount, $currency, $merchant_order_id, $return_url)
     {
         //初始化参数
         $headerArray = array(
@@ -34,7 +34,7 @@ class Airwallex
             $currency = 'HKD';
         }
         $data = array(
-            'request_id' => $request_id,
+            'request_id' => uniqid(),
             'amount' => $amount,
             'currency' => $currency,
             'merchant_order_id' => $merchant_order_id,
@@ -47,7 +47,7 @@ class Airwallex
     }
 
     //发起支付宝支付，返回跳转链接
-    public function obtainAlipayBrowserUrl($token, $request_id, $payment_id)
+    public function obtainAlipayBrowserUrl($token, $payment_id)
     {
         //初始化参数和请求地址
         $headerArray = array(
@@ -58,7 +58,7 @@ class Airwallex
         //检测是否为手机端构建函数
         if (self::checkMobile()) {
             $data = array(
-                'request_id' => $request_id,
+                'request_id' => uniqid(),
                 'payment_method' => array(
                     'type' => 'alipaycn',
                     'alipaycn' => array(
@@ -69,7 +69,7 @@ class Airwallex
             );
         } else {
             $data = array(
-                'request_id' => $request_id,
+                'request_id' => uniqid(),
                 'payment_method' => array(
                     'type' => 'alipaycn',
                     'alipaycn' => array(
