@@ -20,7 +20,7 @@ class Airwallex
     }
 
     //支付订单初始化，返回付款ID
-    public function initializePayment($token, $currency_apiKey, $amount, $currency, $merchant_order_id, $return_url)
+    public function initializePayment($token, $amount, $currency, $merchant_order_id, $return_url)
     {
         //初始化参数
         $headerArray = array(
