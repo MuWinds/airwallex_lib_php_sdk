@@ -28,11 +28,6 @@ class Airwallex
             "Authorization: Bearer $token"
         );
         $submit_url = $this->gatewayUrl . '/pa/payment_intents/create';
-        //若收到的汇率为CNY，则转为HKD以提供支持，需自己补足汇率API
-        if ($currency == 'CNY') {
-            $amount = self::currency_convert($amount, $currency_apiKey, $currency, 'HKD');
-            $currency = 'HKD';
-        }
         $data = array(
             'request_id' => uniqid(),
             'amount' => $amount,
@@ -108,19 +103,6 @@ class Airwallex
         } else {
             return false;
         }
-    }
-
-    //汇率转换，若API变化请自行替换该部分代码（彩虹自带的已不可用）
-    public function currency_convert($amount, $apiKey, $currency, $to_currency)
-    {
-        $fetch_url = 'https://api.fastforex.io/convert';
-        $get_currency_url = $fetch_url . '?api_key=' . $apiKey . '&from=' . $currency . '&to=' . $to_currency . '&amount=' . $amount;
-        $headerArray = array("Content-type:application/json");
-        $output = self::getCurl($get_currency_url, $headerArray);
-        $output = json_decode($output, true);
-        $result_array = $output['result'];
-        $result = $result_array[$to_currency];
-        return $result;
     }
 
     //发起post请求
