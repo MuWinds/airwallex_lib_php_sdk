@@ -18,8 +18,8 @@ $url = $airwallex->obtainAlipayBrowserUrl($token, $payment_id);
 ```  
 验证webhook签名：
 ```php
-$x_timestamp = $_SERVER['HTTP-X-TIMESTAMP'];
-$x_signature = $_SERVER['HTTP-X-SIGNATURE'];
+$x_timestamp = $_SERVER['HTTP_X_TIMESTAMP'];
+$x_signature = $_SERVER['HTTP_X_SIGNATURE'];
 $webhook_key = ''; //在此设置webhook的签名密钥
 $body = file_get_contents("php://input");
 $airwallex = new Airwallex();
