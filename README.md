@@ -17,7 +17,7 @@ $order_no = '1145141919810';
 $currency = 'CNY';
 $amount = 11.4;
 $token = $airwallex->getToken($clientid, $apikey);//自行替换
-$payment_id = $airwallex->initializePayment($token, $apikey, $amount, $currency, $order_no, $return_url);
+$payment_id = $airwallex->initializePayment($token, $amount, $currency, $order_no, $return_url);
 $url = $airwallex->obtainAlipayBrowserUrl($token, $payment_id);
 ```  
 验证webhook签名：
