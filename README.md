@@ -1,5 +1,5 @@
-# airwallex_lib_php
-Airwallex空中云汇，PHP单文件SDK  
+# airwallex_lib_php_sdk
+Airwallex空中云汇，PHP单文件SDK和依赖  
 目前仅支持支付宝，其他的后续更新  
 获取Token：  
 ```php
