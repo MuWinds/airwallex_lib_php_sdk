@@ -26,10 +26,10 @@ $body = file_get_contents("php://input");
 $airwallex = new Airwallex();
 $verify_result = $airwallex->verifySignature($x_timestamp, $x_signature, $webhook_key, $body);
 if ($verify_result) { //验证成功
-  Yourself's Logic
-    } else {
-        echo '';
-    }
+  ......
+  ......
+  ......
+  自行更新逻辑
 } else {
     header("HTTP/1.0 502 Fatal Error"); //返回502错误，使其重传
 }
