@@ -12,7 +12,7 @@ $payment_id = $airwallex->initializePayment($token, $channel['appsecret'], $requ
 $url = $airwallex->obtainAlipayBrowserUrl($token, $request_id + 1, $payment_id);
 ```  
 验证签名：
-```
+```php
 $x_timestamp = $_SERVER['HTTP-X-TIMESTAMP'];
 $x_signature = $_SERVER['HTTP-X-SIGNATURE'];
 $webhook_key = ''; //在此设置webhook的签名密钥
